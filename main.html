@@ -7,21 +7,37 @@
         <p style="font-weight: bold;">Rock Paper Scissors</p>
         
         <button onclick="
-        playGme('rock');
+        playGame('rock');
         ">
         Rock</button>
 
         <button onclick="
-        playGme('paper');
+        playGame('paper');
         ">
         Paper</button>
         
         <button onclick="
-        playGme('scissors');
+        playGame('scissors');
         ">Scissors</button>
         
+        <button onclick="
+            score.wins=0;
+            score.losses=0;
+            score.ties=0;
+        ">Reset Score</button>
         
         <script>
+            
+            const score=JSON.parse(localStorage.getItem('score'));
+            if(score==null){
+                score={
+                    wins: 0,
+                    losses: 0,
+                    ties: 0
+                };
+            }
+            
+            
             function playGame(playerMove){
                 const computerMove=pickComputerMove();
        
@@ -43,11 +59,19 @@
                     else if(computerMove==='scissors') result='You Win';
 
                 }
-                
 
-                alert(`You picked ${playerMove}. Computer picked ${computerMove}. ${result}. `);
+
+                if(result=='You Win') score.wins++;
+                else if(result=='You lose') score.losses++;
+                else if(result=='Tie') score.ties++;
+
+                localStorage.setItem('score', JSON.stringify(score));
+
+                alert(`You picked ${playerMove}. Computer picked ${computerMove}. ${result}.
+                Wins: ${score.wins}, Losses: ${score.losses}, Ties: ${score.ties} `);
 
             }
+            
             function pickComputerMove(){
                 const randomNumber=Math.random();
                 let computerMove='';
